@@ -69,6 +69,13 @@ int Driver::topSpeed() const {
     return top;
 }
 
+bool Driver::hasNumber(int number_) const {
+    if (number_ == number) {
+        return true;
+    }
+    return false;
+}
+
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
     os << "#" << driver.number << " " << driver.acronym << " - " << driver.team << '\n';
     for (const Stint& stint : driver.stints) {

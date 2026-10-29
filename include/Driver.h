@@ -24,9 +24,9 @@ public:
 
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);
-
     double idealLapTime() const;
     int topSpeed() const;
+    bool hasNumber(int number_) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Driver& driver);
 };

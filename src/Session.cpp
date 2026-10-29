@@ -21,6 +21,32 @@ const Driver *Session::fastestDriver() const {
     return fastest;
 }
 
+ Driver *Session::findDriver(int number) {
+    for (Driver& driver : drivers) {
+        if (driver.hasNumber(number)) {
+            return &driver;
+        }
+    }
+    return nullptr;
+}
+
+bool Session::addStint(int number, const Stint &stint) {
+    Driver* driver = findDriver(number);
+    if (driver != nullptr) {
+        driver->addStint(stint);
+        return true;
+    }
+    return false;
+}
+
+bool Session::addLap(int number, const Lap &lap) {
+    Driver* driver = findDriver(number);
+    if (driver != nullptr) {
+        return driver->addLap(lap);
+    }
+    return false;
+}
+
 std::ostream& operator<<(std::ostream& os, const Session& session) {
     os << "=== " << session.name << " ===\n";
     for (const Driver& driver : session.drivers) {

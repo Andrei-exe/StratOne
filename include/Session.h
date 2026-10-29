@@ -12,11 +12,15 @@ class Session {
     std::string name;
     std::vector<Driver> drivers;
 
+    Driver* findDriver(int number) ;
+
 public:
     explicit Session(const std::string& name_);
 
     void addDriver(const Driver& driver);
     const Driver* fastestDriver() const;
+    bool addStint(int number, const Stint& stint);
+    bool addLap(int number, const Lap& lap);
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };
