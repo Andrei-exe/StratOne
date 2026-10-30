@@ -18,7 +18,7 @@ public:
     explicit Session(const std::string& name_);
 
     void addDriver(const Driver& driver);
-    const Driver* fastestDriver() const;
+    const Driver* idealFastestDriver() const;
     bool addStint(int number, const Stint& stint);
     bool addLap(int number, const Lap& lap);
 

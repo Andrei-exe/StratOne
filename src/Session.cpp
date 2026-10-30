@@ -10,7 +10,7 @@ void Session::addDriver(const Driver& driver) {
     drivers.push_back(driver);
 }
 
-const Driver *Session::fastestDriver() const {
+const Driver *Session::idealFastestDriver() const {
     const Driver* fastest = nullptr;
     for (const Driver& driver : drivers) {
         double idealTime = driver.idealLapTime();
@@ -21,7 +21,7 @@ const Driver *Session::fastestDriver() const {
     return fastest;
 }
 
- Driver *Session::findDriver(int number) {
+Driver *Session::findDriver(int number) {
     for (Driver& driver : drivers) {
         if (driver.hasNumber(number)) {
             return &driver;

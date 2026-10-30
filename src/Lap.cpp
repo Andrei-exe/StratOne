@@ -28,8 +28,8 @@ bool Lap::isRepresentative() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Lap& lap) {
-    os << "Lap " << lap.number << ": " << lap.duration << std::endl
-       << "Speed trap: " << lap.speedTrap << " km/h";
+    os << "Lap " << lap.number << ": " << lap.duration << '\n'
+       << '\t' << "Speed trap: " << lap.speedTrap << " km/h";
     if (lap.isPitOutLap) {
         os << " (Pit out lap)";
     }
