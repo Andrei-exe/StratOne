@@ -21,7 +21,20 @@ const Driver *Session::idealFastestDriver() const {
     return fastest;
 }
 
-Driver *Session::findDriver(int number) {
+const Driver *Session::fastestLapDriver() const {
+    const Driver* fastest = nullptr;
+    const Lap* lap = nullptr;
+    for (const Driver& driver : drivers) {
+        const Lap* temp = driver.fastestLap();
+        if (temp != nullptr && (fastest == nullptr || temp->isFasterThan(*lap))) {
+            fastest = &driver;
+            lap = temp;
+        }
+    }
+    return fastest;
+}
+
+Driver *Session::findDriverByNumber(int number) {
     for (Driver& driver : drivers) {
         if (driver.hasNumber(number)) {
             return &driver;
@@ -30,8 +43,17 @@ Driver *Session::findDriver(int number) {
     return nullptr;
 }
 
+const Driver *Session::findDriverByAcronym(const std::string& acronym) const {
+    for (const Driver& driver : drivers) {
+        if (driver.hasAcronym(acronym)) {
+            return &driver;
+        }
+    }
+    return nullptr;
+}
+
 bool Session::addStint(int number, const Stint &stint) {
-    Driver* driver = findDriver(number);
+    Driver* driver = findDriverByNumber(number);
     if (driver != nullptr) {
         driver->addStint(stint);
         return true;
@@ -40,7 +62,7 @@ bool Session::addStint(int number, const Stint &stint) {
 }
 
 bool Session::addLap(int number, const Lap &lap) {
-    Driver* driver = findDriver(number);
+    Driver* driver = findDriverByNumber(number);
     if (driver != nullptr) {
         return driver->addLap(lap);
     }

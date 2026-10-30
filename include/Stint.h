@@ -23,6 +23,7 @@ public:
 
     double averagePace() const;
     double bestSectorInStint(int i) const;
+    const Lap* fastestLap() const;
     int topSpeed() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Stint& stint);

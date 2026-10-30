@@ -41,6 +41,16 @@ double Stint::bestSectorInStint(int i) const {
     return bestSector;
 }
 
+const Lap *Stint::fastestLap() const {
+    const Lap* fastest = nullptr;
+    for (const Lap& lap : laps) {
+        if (lap.isRepresentative() && (fastest == nullptr || lap.isFasterThan(*fastest))) {
+            fastest = &lap;
+        }
+    }
+    return fastest;
+}
+
 int Stint::topSpeed() const {
     int top = 0;
     for (const Lap& lap : laps) {

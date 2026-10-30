@@ -27,6 +27,13 @@ bool Lap::isRepresentative() const {
     return !isPitOutLap && duration > 0;
 }
 
+bool Lap::isFasterThan(const Lap &otherLap) const {
+    if (duration < otherLap.duration) {
+        return true;
+    }
+    return false;
+}
+
 std::ostream& operator<<(std::ostream& os, const Lap& lap) {
     os << "Lap " << lap.number << ": " << lap.duration << '\n'
        << '\t' << "Speed trap: " << lap.speedTrap << " km/h";

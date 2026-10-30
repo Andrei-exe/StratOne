@@ -12,13 +12,18 @@ class Session {
     std::string name;
     std::vector<Driver> drivers;
 
-    Driver* findDriver(int number) ;
+    Driver* findDriverByNumber(int number);
+
 
 public:
     explicit Session(const std::string& name_);
 
     void addDriver(const Driver& driver);
+    const Driver* findDriverByAcronym(const std::string& acronym) const;
+
     const Driver* idealFastestDriver() const;
+    const Driver* fastestLapDriver() const;
+
     bool addStint(int number, const Stint& stint);
     bool addLap(int number, const Lap& lap);
 

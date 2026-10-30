@@ -23,6 +23,7 @@ public:
     double getSector(int i) const;
     int getSpeedTrap() const;
     bool isRepresentative() const;
+    bool isFasterThan(const Lap& otherLap) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Lap& lap);
 };

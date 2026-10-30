@@ -24,9 +24,13 @@ public:
 
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);
+
     double idealLapTime() const;
     int topSpeed() const;
+    const Lap* fastestLap() const;
+
     bool hasNumber(int number_) const;
+    bool hasAcronym(const std::string& acronym_) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Driver& driver);
 };

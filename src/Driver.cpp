@@ -69,8 +69,26 @@ int Driver::topSpeed() const {
     return top;
 }
 
+const Lap *Driver::fastestLap() const {
+    const Lap* fastest = nullptr;
+    for (const Stint& stint : stints) {
+        const Lap* temp = stint.fastestLap();
+        if (temp != nullptr && (fastest == nullptr || temp->isFasterThan(*fastest))) {
+            fastest = temp;
+        }
+    }
+    return fastest;
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
+        return true;
+    }
+    return false;
+}
+
+bool Driver::hasAcronym(const std::string &acronym_) const {
+    if (acronym_ == acronym) {
         return true;
     }
     return false;
