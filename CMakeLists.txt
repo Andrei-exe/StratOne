@@ -73,6 +73,7 @@ target_sources(${MAIN_LIBRARY_NAME}
         src/Stint.cpp
         src/Driver.cpp
         src/Session.cpp
+        src/Loader.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

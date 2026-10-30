@@ -33,7 +33,8 @@ double Stint::averagePace() const {
 double Stint::bestSectorInStint(int i) const {
     double bestSector = -1;
     for (const Lap& lap : laps) {
-        if (lap.isRepresentative() && (bestSector < 0 || lap.getSector(i) < bestSector)) {
+        double sector = lap.getSector(i);
+        if (lap.isRepresentative() && (bestSector < 0 || sector < bestSector) && sector > 0) {
             bestSector = lap.getSector(i);
         }
     }
@@ -51,7 +52,12 @@ int Stint::topSpeed() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Stint& stint) {
-    os << "Laps " << stint.startLap << " - " << stint.endLap << ": " << stint.compound << std::endl;
+    if (stint.startLap == stint.endLap) {
+        os << "Lap: " << stint.startLap << ": " << stint.compound << std::endl;
+    }
+    else {
+        os << "Laps " << stint.startLap << " - " << stint.endLap << ": " << stint.compound << std::endl;
+    }
     for (const Lap& lap : stint.laps) {
         os << '\t' << lap << '\n';
     }
