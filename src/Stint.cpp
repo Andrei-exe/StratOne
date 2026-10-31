@@ -35,6 +35,10 @@ double Stint::medianPace() const {
     return (lapTimes[lapTimes.size() / 2 - 1] + lapTimes[lapTimes.size() / 2]) / 2;
 }
 
+int Stint::tyreAgeAt(const Lap &lap) const {
+    return tyreAgeAtStart + (lap.getLapNumber() - startLap);
+}
+
 bool Stint::isLapInStint(int lapNumber) const {
     return lapNumber >= startLap && lapNumber <= endLap;
 }
@@ -89,6 +93,27 @@ int Stint::topSpeed() const {
     return top;
 }
 
+double Stint::tyreDeg() const {
+    double median = medianPace();
+    int cleanLapCount = 0, minLapsForDeg = 5;
+    double sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+    for (const Lap& lap : laps) {
+        if (isCleanLap(lap, median)) {
+            cleanLapCount++;
+            int x = tyreAgeAt(lap);
+            double y = lap.getLapDuration();
+            sumX += x;
+            sumY += y;
+            sumXY += x * y;
+            sumXX += x * x;
+        }
+    }
+    if (cleanLapCount < minLapsForDeg) {
+        return 0;
+    }
+    return (cleanLapCount * sumXY - sumX * sumY) / (cleanLapCount * sumXX - sumX * sumX);
+}
+
 std::ostream& operator<<(std::ostream& os, const Stint& stint) {
     if (stint.startLap == stint.endLap) {
         os << "Lap " << stint.startLap;
@@ -104,6 +129,14 @@ std::ostream& operator<<(std::ostream& os, const Stint& stint) {
     }
     else {
         os << ", avg -";
+    }
+
+    double deg = stint.tyreDeg();
+    if (deg != 0) {
+        os << ", deg " << deg << " s/lap";
+    }
+    else {
+        os << ", deg -";
     }
     os << '\n';
 

@@ -17,6 +17,7 @@ class Stint {
     std::vector<Lap> laps;
 
     double medianPace() const;
+    int tyreAgeAt(const Lap& lap) const;
 
 public:
     Stint(const std::string& compound_, int tyreAgeAtStart_, int startLap_, int endLap_);
@@ -28,6 +29,7 @@ public:
     double bestSectorInStint(int i) const;
     const Lap* fastestLap() const;
     int topSpeed() const;
+    double tyreDeg() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Stint& stint);
 };
