@@ -22,6 +22,8 @@ public:
     Driver& operator=(const Driver& other);
     ~Driver();
 
+    const std::string& getAcronym() const;
+
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);
 

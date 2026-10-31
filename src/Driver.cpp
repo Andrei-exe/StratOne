@@ -22,6 +22,10 @@ Driver& Driver::operator=(const Driver& other) {
 
 Driver::~Driver() {}
 
+const std::string &Driver::getAcronym() const {
+    return acronym;
+}
+
 void Driver::addStint(const Stint &stint) {
     stints.push_back(stint);
 }
