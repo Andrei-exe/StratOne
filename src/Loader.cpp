@@ -28,23 +28,16 @@ void Loader::readDrivers(Session &session) const {
     }
 }
 
-Session Loader::load(const std::string &sessionName) const {
-    Session session(sessionName);
-    readDrivers(session);
-    readStints(session);
-    readLaps(session);
-    return session;
-}
-
 void Loader::readStints(Session &session) const {
     std::string stintsFile = folderPath + "/stints.csv";
     csv::CSVReader reader(stintsFile);
     for (const auto& row : reader) {
         int driverNumber = row["driver_number"].get<int>();
         std::string compound = row["compound"].get<std::string>();
+        int tyreAgeAtStart = row["tyre_age_at_start"].get<int>();
         int lapStart = row["lap_start"].get<int>();
         int lapEnd = row["lap_end"].get<int>();
-        session.addStint(driverNumber, Stint(compound, lapStart, lapEnd));
+        session.addStint(driverNumber, Stint(compound, tyreAgeAtStart, lapStart, lapEnd));
     }
 }
 
@@ -67,6 +60,14 @@ void Loader::readLaps(Session &session) const {
         bool isPitOutLap = row["is_pit_out_lap"].get<bool>();
         session.addLap(driverNumber, Lap(lapNumber, lapDuration, sectors, speedTrap, isPitOutLap));
     }
+}
+
+Session Loader::load(const std::string &sessionName) const {
+    Session session(sessionName);
+    readDrivers(session);
+    readStints(session);
+    readLaps(session);
+    return session;
 }
 
 std::ostream& operator<<(std::ostream &os, const Loader &loader) {

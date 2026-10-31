@@ -3,9 +3,37 @@
 //
 
 #include "Stint.h"
+#include <algorithm>
 
-Stint::Stint(const std::string& compound_, int startLap_, int endLap_) :
-    compound(compound_), startLap(startLap_), endLap(endLap_) {}
+namespace {
+    bool isCleanLap(const Lap& lap, double medianPace) {
+        double outlierThreshold = 1.07;
+        if (lap.isRepresentative() && lap.getLapDuration() <= medianPace * outlierThreshold) {
+            return true;
+        }
+        return false;
+    }
+}
+
+Stint::Stint(const std::string& compound_, int tyreAgeAtStart_, int startLap_, int endLap_) :
+    compound(compound_), tyreAgeAtStart(tyreAgeAtStart_), startLap(startLap_), endLap(endLap_) {}
+
+double Stint::medianPace() const {
+    std::vector<double> lapTimes;
+    for (const Lap& lap : laps) {
+        if (lap.isRepresentative()) {
+            lapTimes.push_back(lap.getLapDuration());
+        }
+    }
+    if (lapTimes.empty()) {
+        return 0;
+    }
+    std::ranges::sort(lapTimes);
+    if (lapTimes.size() % 2 != 0) {
+        return lapTimes[lapTimes.size() / 2];
+    }
+    return (lapTimes[lapTimes.size() / 2 - 1] + lapTimes[lapTimes.size() / 2]) / 2;
+}
 
 bool Stint::isLapInStint(int lapNumber) const {
     return lapNumber >= startLap && lapNumber <= endLap;
@@ -16,10 +44,10 @@ void Stint::addLap(const Lap& lap) {
 }
 
 double Stint::averagePace() const {
-    double totalPace = 0;
+    double totalPace = 0, median = medianPace();
     int lapCount = 0;
     for (const Lap& lap : laps) {
-        if (lap.isRepresentative()) {
+        if (isCleanLap(lap, median)) {
             totalPace += lap.getLapDuration();
             lapCount++;
         }
@@ -68,7 +96,7 @@ std::ostream& operator<<(std::ostream& os, const Stint& stint) {
     else {
         os << "Laps " << stint.startLap << " - " << stint.endLap;
     }
-    os << ": " << stint.compound;
+    os << ": " << stint.compound << " (" << stint.tyreAgeAtStart << " laps old at start)";
 
     double avgPace = stint.averagePace();
     if (avgPace > 0) {

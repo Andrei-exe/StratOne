@@ -11,12 +11,15 @@
 
 class Stint {
     std::string compound;
+    int tyreAgeAtStart;
     int startLap;
     int endLap;
     std::vector<Lap> laps;
 
+    double medianPace() const;
+
 public:
-    Stint(const std::string& compound_, int startLap_, int endLap_);
+    Stint(const std::string& compound_, int tyreAgeAtStart_, int startLap_, int endLap_);
 
     bool isLapInStint(int lapNumber) const;
     void addLap(const Lap& lap);
