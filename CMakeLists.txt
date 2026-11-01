@@ -104,9 +104,7 @@ target_include_directories(${MAIN_LIBRARY_NAME} SYSTEM PUBLIC
     ${EXT_PUBLIC_DIR}/date
 )
 target_include_directories(${MAIN_LIBRARY_NAME} SYSTEM PRIVATE
-    ${EXT_PRIVATE_DIR}/digestpp
-    ${EXT_PRIVATE_DIR}/rlutil
-    ${EXT_PRIVATE_DIR}/random
+    ${EXT_PRIVATE_DIR}
 )
 
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
