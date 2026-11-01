@@ -75,11 +75,24 @@ Fuel Loader::readFuel() const {
     return Fuel{startFuel, secondsPerKg};
 }
 
+void Loader::readPitStops(Session &session) const {
+    std::string pitStopsFile = folderPath + "/pit.csv";
+    csv::CSVReader reader(pitStopsFile);
+    for (const auto& row : reader) {
+        int driverNumber = row["driver_number"].get<int>();
+        int lapNumber = row["lap_number"].get<int>();
+        double pitlaneDuration = row["lane_duration"].get<double>();
+        double stopDuration = columnValueOrZero(row, "stop_duration");
+        session.addPitStop(driverNumber, PitStop(lapNumber, pitlaneDuration, stopDuration));
+    }
+}
+
 Session Loader::load(const std::string &sessionName) const {
     Session session(sessionName);
     readDrivers(session);
     readStints(session);
     readLaps(session);
+    readPitStops(session);
     session.applyFuelCorrection(readFuel());
     return session;
 }

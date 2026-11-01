@@ -27,6 +27,7 @@ public:
     bool addStint(int number, const Stint& stint);
     bool addLap(int number, const Lap& lap);
     void applyFuelCorrection(const Fuel& fuel);
+    bool addPitStop(int number, const PitStop& pitStop);
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };

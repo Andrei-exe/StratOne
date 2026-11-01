@@ -86,6 +86,15 @@ void Session::applyFuelCorrection(const Fuel &fuel) {
     }
 }
 
+bool Session::addPitStop(int number, const PitStop &pitStop) {
+    Driver* driver = findDriverByNumber(number);
+    if (driver == nullptr) {
+        return false;
+    }
+    driver->addPitStop(pitStop);
+    return true;
+}
+
 std::ostream& operator<<(std::ostream& os, const Session& session) {
     os << "=== " << session.name << " ===\n";
     for (const Driver& driver : session.drivers) {

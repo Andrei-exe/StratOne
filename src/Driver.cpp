@@ -8,7 +8,7 @@ Driver::Driver(int number_, const std::string& acronym_, const std::string& full
     number(number_), acronym(acronym_), fullName(fullName_), team(team_) {}
 
 Driver::Driver(const Driver& other) :
-    number(other.number), acronym(other.acronym), fullName(other.fullName), team(other.team), stints(other.stints) {}
+    number(other.number), acronym(other.acronym), fullName(other.fullName), team(other.team), stints(other.stints), pitStops(other.pitStops) {}
 
 Driver& Driver::operator=(const Driver& other) {
     if (this != &other) {
@@ -17,6 +17,7 @@ Driver& Driver::operator=(const Driver& other) {
         fullName = other.fullName;
         team = other.team;
         stints = other.stints;
+        pitStops = other.pitStops;
     }
     return *this;
 }
@@ -49,6 +50,10 @@ int Driver::lastLapNumber() const {
         }
     }
     return last;
+}
+
+void Driver::addPitStop(const PitStop &pitStop) {
+    pitStops.push_back(pitStop);
 }
 
 double Driver::bestSectorOverall(int i) const {
@@ -119,6 +124,12 @@ std::ostream& operator<<(std::ostream& os, const Driver& driver) {
     os << "#" << driver.number << " " << driver.fullName << " (" <<  driver.acronym << ") - " << driver.team << '\n';
     for (const Stint& stint : driver.stints) {
         os << " " << stint;
+    }
+    if (!driver.pitStops.empty()) {
+        os << "Pit stops: \n";
+        for (const PitStop& pitStop : driver.pitStops) {
+            os << '\t' << pitStop << '\n';
+        }
     }
     return os;
 }

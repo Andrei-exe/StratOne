@@ -6,6 +6,7 @@
 #define OOP_DRIVER_H
 #include <string>
 #include "Stint.h"
+#include "PitStop.h"
 
 
 class Driver {
@@ -14,6 +15,7 @@ class Driver {
     std::string fullName;
     std::string team;
     std::vector<Stint> stints;
+    std::vector<PitStop> pitStops;
 
     double bestSectorOverall(int i) const;
 
@@ -28,6 +30,7 @@ public:
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);
     int lastLapNumber() const;
+    void addPitStop(const PitStop& pitStop);
 
     double idealLapTime() const;
     int topSpeed() const;

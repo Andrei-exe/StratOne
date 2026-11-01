@@ -14,6 +14,7 @@ class Loader {
     void readStints(Session& session) const;
     void readLaps(Session& session) const;
     Fuel readFuel() const;
+    void readPitStops(Session& session) const;
 
 public:
     explicit Loader(const std::string &folderPath_);
