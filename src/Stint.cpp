@@ -39,6 +39,13 @@ int Stint::tyreAgeAt(const Lap &lap) const {
     return tyreAgeAtStart + (lap.getLapNumber() - startLap);
 }
 
+bool Stint::isSlick() const {
+    if (compound == "SOFT" || compound == "MEDIUM" || compound == "HARD") {
+        return true;
+    }
+    return false;
+}
+
 bool Stint::isLapInStint(int lapNumber) const {
     return lapNumber >= startLap && lapNumber <= endLap;
 }
@@ -98,6 +105,9 @@ int Stint::topSpeed() const {
 }
 
 double Stint::tyreDeg() const {
+    if (!isSlick()) {
+        return 0;
+    }
     double median = medianPace();
     int cleanLapCount = 0, minLapsForDeg = 5;
     double sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
@@ -142,7 +152,10 @@ std::ostream& operator<<(std::ostream& os, const Stint& stint) {
     }
 
     double deg = stint.tyreDeg();
-    if (deg != 0) {
+    if (!stint.isSlick()) {
+        os << ", deg - (wet)";
+    }
+    else if (deg != 0) {
         os << ", deg " << deg << " s/lap";
     }
     else {

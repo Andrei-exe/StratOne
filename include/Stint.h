@@ -18,6 +18,7 @@ class Stint {
 
     double medianPace() const;
     int tyreAgeAt(const Lap& lap) const;
+    bool isSlick() const;
 
 public:
     Stint(const std::string& compound_, int tyreAgeAtStart_, int startLap_, int endLap_);
