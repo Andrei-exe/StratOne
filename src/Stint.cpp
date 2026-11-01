@@ -8,7 +8,7 @@
 namespace {
     bool isCleanLap(const Lap& lap, double medianPace) {
         double outlierThreshold = 1.07;
-        if (lap.isRepresentative() && lap.getLapDuration() <= medianPace * outlierThreshold) {
+        if (lap.isRepresentative() && lap.fuelCorrectedDuration() <= medianPace * outlierThreshold) {
             return true;
         }
         return false;
@@ -22,7 +22,7 @@ double Stint::medianPace() const {
     std::vector<double> lapTimes;
     for (const Lap& lap : laps) {
         if (lap.isRepresentative()) {
-            lapTimes.push_back(lap.getLapDuration());
+            lapTimes.push_back(lap.fuelCorrectedDuration());
         }
     }
     if (lapTimes.empty()) {
@@ -45,6 +45,10 @@ bool Stint::isLapInStint(int lapNumber) const {
 
 void Stint::addLap(const Lap& lap) {
     laps.push_back(lap);
+}
+
+int Stint::lastLapNumber() const {
+    return endLap;
 }
 
 double Stint::averagePace() const {
@@ -101,7 +105,7 @@ double Stint::tyreDeg() const {
         if (isCleanLap(lap, median)) {
             cleanLapCount++;
             int x = tyreAgeAt(lap);
-            double y = lap.getLapDuration();
+            double y = lap.fuelCorrectedDuration();
             sumX += x;
             sumY += y;
             sumXY += x * y;
@@ -112,6 +116,12 @@ double Stint::tyreDeg() const {
         return 0;
     }
     return (cleanLapCount * sumXY - sumX * sumY) / (cleanLapCount * sumXX - sumX * sumX);
+}
+
+void Stint::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
+    for (Lap& lap : laps) {
+        lap.applyFuelCorrection(fuel, totalLaps);
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Stint& stint) {

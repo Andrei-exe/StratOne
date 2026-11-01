@@ -13,6 +13,7 @@ class Session {
     std::vector<Driver> drivers;
 
     Driver* findDriverByNumber(int number);
+    int sessionLength() const;
 
 public:
     explicit Session(const std::string& name_);
@@ -25,6 +26,7 @@ public:
 
     bool addStint(int number, const Stint& stint);
     bool addLap(int number, const Lap& lap);
+    void applyFuelCorrection(const Fuel& fuel);
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };

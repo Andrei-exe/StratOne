@@ -43,6 +43,16 @@ Driver *Session::findDriverByNumber(int number) {
     return nullptr;
 }
 
+int Session::sessionLength() const {
+    int length = 0;
+    for (const Driver& driver : drivers) {
+        if (driver.lastLapNumber() > length) {
+            length = driver.lastLapNumber();
+        }
+    }
+    return length;
+}
+
 const Driver *Session::findDriverByAcronym(const std::string& acronym) const {
     for (const Driver& driver : drivers) {
         if (driver.hasAcronym(acronym)) {
@@ -67,6 +77,13 @@ bool Session::addLap(int number, const Lap &lap) {
         return driver->addLap(lap);
     }
     return false;
+}
+
+void Session::applyFuelCorrection(const Fuel &fuel) {
+    int length = sessionLength();
+    for (Driver& driver : drivers) {
+        driver.applyFuelCorrection(fuel, length);
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Session& session) {

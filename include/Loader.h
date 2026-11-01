@@ -13,6 +13,7 @@ class Loader {
     void readDrivers(Session& session) const;
     void readStints(Session& session) const;
     void readLaps(Session& session) const;
+    Fuel readFuel() const;
 
 public:
     explicit Loader(const std::string &folderPath_);

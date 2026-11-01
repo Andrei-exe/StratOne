@@ -12,7 +12,7 @@ class Fuel {
     double secondsPerKg;
 
 public:
-    Fuel(double startFuelQty_, double fuelCostPerLap_);
+    Fuel(double startFuelQty_, double secondsPerKg_);
 
     double timeCost(int lapNr, int totalLaps) const;
 

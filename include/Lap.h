@@ -6,6 +6,7 @@
 #define OOP_LAPS_H
 #include <array>
 #include <ostream>
+#include "Fuel.h"
 
 
 class Lap {
@@ -14,6 +15,7 @@ class Lap {
     std::array<double,3> sectors;
     int speedTrap;
     bool isPitOutLap;
+    double fuelPenalty;
 
 public:
     Lap(int number_, double duration_, std::array<double,3> sectors_, int speedTrap_, bool isPitOutLap_);
@@ -24,6 +26,8 @@ public:
     int getSpeedTrap() const;
     bool isRepresentative() const;
     bool isFasterThan(const Lap& otherLap) const;
+    void applyFuelCorrection(const Fuel& fuel, int totalLaps);
+    double fuelCorrectedDuration() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Lap& lap);
 };

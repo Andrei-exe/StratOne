@@ -4,8 +4,8 @@
 
 #include "Fuel.h"
 
-Fuel::Fuel(double startFuelQty_, double fuelCostPerLap_) :
-    startFuelQty(startFuelQty_), secondsPerKg(fuelCostPerLap_) {}
+Fuel::Fuel(double startFuelQty_, double secondsPerKg_) :
+    startFuelQty(startFuelQty_), secondsPerKg(secondsPerKg_) {}
 
 double Fuel::timeCost(int lapNr, int totalLaps) const {
     if (totalLaps <= 0) {

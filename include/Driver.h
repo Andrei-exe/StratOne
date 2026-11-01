@@ -27,10 +27,12 @@ public:
 
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);
+    int lastLapNumber() const;
 
     double idealLapTime() const;
     int topSpeed() const;
     const Lap* fastestLap() const;
+    void applyFuelCorrection(const Fuel& fuel, int totalLaps);
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;

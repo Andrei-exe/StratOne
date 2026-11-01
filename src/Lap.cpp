@@ -5,7 +5,7 @@
 #include "Lap.h"
 
 Lap::Lap(int number_, double duration_, std::array<double, 3> sectors_, int speedTrap_, bool isPitOutLap_) :
-    number(number_), duration(duration_), sectors(sectors_), speedTrap(speedTrap_), isPitOutLap(isPitOutLap_) {}
+    number(number_), duration(duration_), sectors(sectors_), speedTrap(speedTrap_), isPitOutLap(isPitOutLap_), fuelPenalty(0) {}
 
 int Lap::getLapNumber() const {
     return number;
@@ -32,6 +32,14 @@ bool Lap::isFasterThan(const Lap &otherLap) const {
         return true;
     }
     return false;
+}
+
+void Lap::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
+    fuelPenalty = fuel.timeCost(number, totalLaps);
+}
+
+double Lap::fuelCorrectedDuration() const {
+    return duration - fuelPenalty;
 }
 
 std::ostream& operator<<(std::ostream& os, const Lap& lap) {

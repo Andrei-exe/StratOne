@@ -24,12 +24,14 @@ public:
 
     bool isLapInStint(int lapNumber) const;
     void addLap(const Lap& lap);
+    int lastLapNumber() const;
 
     double averagePace() const;
     double bestSectorInStint(int i) const;
     const Lap* fastestLap() const;
     int topSpeed() const;
     double tyreDeg() const;
+    void applyFuelCorrection(const Fuel& fuel, int totalLaps);
 
     friend std::ostream& operator<<(std::ostream& os, const Stint& stint);
 };

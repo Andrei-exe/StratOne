@@ -41,6 +41,16 @@ bool Driver::addLap(const Lap &lap) {
     return false;
 }
 
+int Driver::lastLapNumber() const {
+    int last = 0;
+    for (const Stint& stint : stints) {
+        if (stint.lastLapNumber() > last) {
+            last = stint.lastLapNumber();
+        }
+    }
+    return last;
+}
+
 double Driver::bestSectorOverall(int i) const {
     double best = -1;
     for (const Stint& stint : stints) {
@@ -83,6 +93,12 @@ const Lap *Driver::fastestLap() const {
         }
     }
     return fastest;
+}
+
+void Driver::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
+    for (Stint& stint : stints) {
+        stint.applyFuelCorrection(fuel, totalLaps);
+    }
 }
 
 bool Driver::hasNumber(int number_) const {

@@ -63,11 +63,24 @@ void Loader::readLaps(Session &session) const {
     }
 }
 
+Fuel Loader::readFuel() const {
+    std::string fuelFile = folderPath + "/fuel.csv";
+    csv::CSVReader reader(fuelFile);
+    csv::CSVRow row;
+    if (!reader.read_row(row)) {
+        return Fuel{0, 0};
+    }
+    double startFuel = row["start_fuel_kg"].get<double>();
+    double secondsPerKg = row["seconds_per_kg"].get<double>();
+    return Fuel{startFuel, secondsPerKg};
+}
+
 Session Loader::load(const std::string &sessionName) const {
     Session session(sessionName);
     readDrivers(session);
     readStints(session);
     readLaps(session);
+    session.applyFuelCorrection(readFuel());
     return session;
 }
 
