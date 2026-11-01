@@ -57,15 +57,15 @@ int Stint::lapCount() const {
 
 double Stint::averagePace() const {
     double totalPace = 0, median = medianPace();
-    int lapCount = 0;
+    int lapCountInStint = 0;
     for (const Lap& lap : laps) {
         if (isCleanLap(lap, median)) {
             totalPace += lap.getLapDuration();
-            lapCount++;
+            lapCountInStint++;
         }
     }
-    if (lapCount > 0) {
-        return totalPace / lapCount;
+    if (lapCountInStint > 0) {
+        return totalPace / lapCountInStint;
     }
     return 0;
 }
