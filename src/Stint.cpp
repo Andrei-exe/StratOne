@@ -3,7 +3,7 @@
 //
 
 #include "Stint.h"
-#include <algorithm>
+#include "Statistics.h"
 
 namespace {
     bool isCleanLap(const Lap& lap, double medianPace) {
@@ -25,14 +25,7 @@ double Stint::medianPace() const {
             lapTimes.push_back(lap.fuelCorrectedDuration());
         }
     }
-    if (lapTimes.empty()) {
-        return 0;
-    }
-    std::ranges::sort(lapTimes);
-    if (lapTimes.size() % 2 != 0) {
-        return lapTimes[lapTimes.size() / 2];
-    }
-    return (lapTimes[lapTimes.size() / 2 - 1] + lapTimes[lapTimes.size() / 2]) / 2;
+    return stats::median(lapTimes);
 }
 
 int Stint::tyreAgeAt(const Lap &lap) const {
