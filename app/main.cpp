@@ -49,7 +49,7 @@ namespace {
             std::cout << "\nError finding driver\n";
             return;
         }
-        std::cout << "\nIdeal lap: " << driver->idealLapTime() << " by " << driver->getAcronym() << " km/h\n";
+        std::cout << "\nIdeal lap: " << driver->idealLapTime() << "s by " << driver->getAcronym() << '\n';
     }
 
     void runMenu(const Session& session) {

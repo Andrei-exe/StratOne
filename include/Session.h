@@ -14,7 +14,6 @@ class Session {
 
     Driver* findDriverByNumber(int number);
 
-
 public:
     explicit Session(const std::string& name_);
 
