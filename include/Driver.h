@@ -11,13 +11,14 @@
 class Driver {
     int number;
     std::string acronym;
+    std::string fullName;
     std::string team;
     std::vector<Stint> stints;
 
     double bestSectorOverall(int i) const;
 
 public:
-    Driver(int number_, const std::string& acronym_, const std::string& team_);
+    Driver(int number_, const std::string& acronym_, const std::string& fullName_, const std::string& team_);
     Driver(const Driver& other);
     Driver& operator=(const Driver& other);
     ~Driver();

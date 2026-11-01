@@ -4,16 +4,17 @@
 
 #include "Driver.h"
 
-Driver::Driver(int number_, const std::string& acronym_, const std::string& team_) :
-    number(number_), acronym(acronym_), team(team_) {}
+Driver::Driver(int number_, const std::string& acronym_, const std::string& fullName_, const std::string& team_) :
+    number(number_), acronym(acronym_), fullName(fullName_), team(team_) {}
 
 Driver::Driver(const Driver& other) :
-    number(other.number), acronym(other.acronym), team(other.team), stints(other.stints) {}
+    number(other.number), acronym(other.acronym), fullName(other.fullName), team(other.team), stints(other.stints) {}
 
 Driver& Driver::operator=(const Driver& other) {
     if (this != &other) {
         number = other.number;
         acronym = other.acronym;
+        fullName = other.fullName;
         team = other.team;
         stints = other.stints;
     }
@@ -99,7 +100,7 @@ bool Driver::hasAcronym(const std::string &acronym_) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
-    os << "#" << driver.number << " " << driver.acronym << " - " << driver.team << '\n';
+    os << "#" << driver.number << " " << driver.fullName << " (" <<  driver.acronym << ") - " << driver.team << '\n';
     for (const Stint& stint : driver.stints) {
         os << " " << stint;
     }
