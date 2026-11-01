@@ -26,6 +26,7 @@ public:
     bool isLapInStint(int lapNumber) const;
     void addLap(const Lap& lap);
     int lastLapNumber() const;
+    int lapCount() const;
 
     double averagePace() const;
     double bestSectorInStint(int i) const;

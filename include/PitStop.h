@@ -15,6 +15,8 @@ class PitStop {
 public:
     PitStop(int inLap_, double pitlaneDuration_, double stopDuration_);
 
+    double getPitLaneDuration() const;
+
     friend std::ostream& operator<<(std::ostream& os, const PitStop& pitStop);
 };
 

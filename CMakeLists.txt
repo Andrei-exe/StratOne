@@ -77,6 +77,7 @@ target_sources(${MAIN_LIBRARY_NAME}
         src/Fuel.cpp
         src/PitStop.cpp
         src/Statistics.cpp
+        src/Strategy.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

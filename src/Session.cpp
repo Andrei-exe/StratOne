@@ -3,6 +3,7 @@
 //
 
 #include "Session.h"
+#include "Statistics.h"
 
 Session::Session(const std::string& name_) : name(name_) {}
 
@@ -93,6 +94,19 @@ bool Session::addPitStop(int number, const PitStop &pitStop) {
     }
     driver->addPitStop(pitStop);
     return true;
+}
+
+double Session::pitLoss() const {
+    std::vector<double> pitLoss;
+    for (const Driver& driver : drivers) {
+        std::vector<double> durations = driver.pitLaneDurations();
+        pitLoss.insert(pitLoss.end(), durations.begin(), durations.end());
+    }
+    return stats::median(pitLoss);
+}
+
+Strategy Session::strategy() const {
+    return Strategy{pitLoss(), sessionLength()};
 }
 
 std::ostream& operator<<(std::ostream& os, const Session& session) {

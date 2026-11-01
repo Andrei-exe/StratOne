@@ -106,6 +106,31 @@ void Driver::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
     }
 }
 
+std::vector<double> Driver::pitLaneDurations() const {
+    std::vector<double> pitLaneDurations;
+    for (const PitStop& pitStop : pitStops) {
+        pitLaneDurations.push_back(pitStop.getPitLaneDuration());
+    }
+    return pitLaneDurations;
+}
+
+double Driver::averageDeg() const {
+    double weightedDegSum = 0;
+    int lapsCounted = 0;
+    for (const Stint& stint : stints) {
+        double stintTyreDeg = stint.tyreDeg();
+        if (stintTyreDeg == 0) {
+            continue;
+        }
+        weightedDegSum += stintTyreDeg * stint.lapCount();
+        lapsCounted += stint.lapCount();
+    }
+    if (lapsCounted == 0) {
+        return 0;
+    }
+    return weightedDegSum / lapsCounted;
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
         return true;

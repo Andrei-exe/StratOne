@@ -36,6 +36,8 @@ public:
     int topSpeed() const;
     const Lap* fastestLap() const;
     void applyFuelCorrection(const Fuel& fuel, int totalLaps);
+    std::vector<double> pitLaneDurations() const;
+    double averageDeg() const;
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;

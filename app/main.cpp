@@ -2,6 +2,8 @@
 #include "Loader.h"
 #include <iostream>
 
+#include "Strategy.h"
+
 namespace {
     void showDriverInfo(const Session& session) {
         std::string acronym;
@@ -82,8 +84,12 @@ namespace {
 int main() {
     Loader loader("assets/netherlands_2023");
     Session session(loader.load("netherlands_2023"));
+    std::cout << session.strategy() << '\n';
+    const Driver* driver = session.findDriverByAcronym("VER");
+    Strategy strategy = session.strategy();
+    std::cout << strategy.optimalStintLength(driver->averageDeg()) << strategy.optimalStops(driver->averageDeg()) << '\n';
 
-    runMenu(session);
+    //runMenu(session);
 
     return 0;
 }

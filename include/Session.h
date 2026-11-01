@@ -6,6 +6,7 @@
 #define OOP_SESSION_H
 #include <string>
 #include "Driver.h"
+#include "Strategy.h"
 
 
 class Session {
@@ -28,6 +29,8 @@ public:
     bool addLap(int number, const Lap& lap);
     void applyFuelCorrection(const Fuel& fuel);
     bool addPitStop(int number, const PitStop& pitStop);
+    double pitLoss() const;
+    Strategy strategy() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };

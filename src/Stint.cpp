@@ -51,6 +51,10 @@ int Stint::lastLapNumber() const {
     return endLap;
 }
 
+int Stint::lapCount() const {
+    return endLap - startLap + 1;
+}
+
 double Stint::averagePace() const {
     double totalPace = 0, median = medianPace();
     int lapCount = 0;
