@@ -109,6 +109,15 @@ Strategy Session::strategy() const {
     return Strategy{pitLoss(), sessionLength()};
 }
 
+bool Session::isDryRace() const {
+    for (const Driver& driver : drivers) {
+        if (!driver.racedOnSlicksOnly()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::ostream& operator<<(std::ostream& os, const Session& session) {
     os << "=== " << session.name << " ===\n";
     for (const Driver& driver : session.drivers) {

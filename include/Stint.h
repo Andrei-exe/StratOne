@@ -18,7 +18,6 @@ class Stint {
 
     double medianPace() const;
     int tyreAgeAt(const Lap& lap) const;
-    bool isSlick() const;
 
 public:
     Stint(const std::string& compound_, int tyreAgeAtStart_, int startLap_, int endLap_);
@@ -27,6 +26,7 @@ public:
     void addLap(const Lap& lap);
     int lastLapNumber() const;
     int lapCount() const;
+    bool isSlick() const;
 
     double averagePace() const;
     double bestSectorInStint(int i) const;

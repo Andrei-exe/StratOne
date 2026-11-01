@@ -31,6 +31,7 @@ public:
     bool addPitStop(int number, const PitStop& pitStop);
     double pitLoss() const;
     Strategy strategy() const;
+    bool isDryRace() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };

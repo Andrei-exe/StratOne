@@ -38,9 +38,11 @@ public:
     void applyFuelCorrection(const Fuel& fuel, int totalLaps);
     std::vector<double> pitLaneDurations() const;
     double averageDeg() const;
+    int pitStopCount() const;
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;
+    bool racedOnSlicksOnly() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Driver& driver);
 };

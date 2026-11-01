@@ -5,17 +5,24 @@
 #include "Strategy.h"
 
 namespace {
-    void showDriverInfo(const Session& session) {
+    const Driver* readDriver(const Session& session) {
         std::string acronym;
         std::cout << "\nDriver acronym: ";
         if (!(std::cin >> acronym)) {
             std::cout << "\nError reading acronym\n";
-            return;
+            return nullptr;
         }
-
         const Driver* driver = session.findDriverByAcronym(acronym);
         if (driver == nullptr) {
             std::cout << "\nError finding driver\n";
+            return nullptr;
+        }
+        return driver;
+    }
+
+    void showDriverInfo(const Session& session) {
+        const Driver* driver = readDriver(session);
+        if (driver == nullptr) {
             return;
         }
         std::cout << '\n' << *driver << '\n';
@@ -54,9 +61,43 @@ namespace {
         std::cout << "\nIdeal lap: " << driver->idealLapTime() << "s by " << driver->getAcronym() << '\n';
     }
 
+    void showStrategyReport(const Session& session) {
+        const Driver* driver = readDriver(session);
+        if (driver == nullptr) {
+            return;
+        }
+        if (!session.isDryRace()) {
+            std::cout << "\nStrategy report not available for wet races yet\n";
+            return;
+        }
+        Strategy strategy = session.strategy();
+        double deg = driver->averageDeg();
+        int optimalStops = strategy.optimalStops(deg);
+        if (optimalStops == 0) {
+            std::cout << "\nNot enough data for strategy estimate\n";
+            return;
+        }
+        int actualStops = driver->pitStopCount();
+        std::cout << '\n' << strategy
+            << "\nAverage degradation: " << deg
+            << "\nOptimal stops: " << optimalStops
+            << "\nOptimal stint length: " << strategy.optimalStintLength(deg)
+            << "\nActual stops: " << actualStops << '\n';
+        int diff = actualStops - optimalStops;
+        if (diff == 0) {
+            std::cout << "\nStrategy matched the optimum\n";
+        }
+        else if (diff > 0) {
+            std::cout << '\n' << diff << " more stop(s) than optimal\n";
+        }
+        else {
+            std::cout << '\n' << optimalStops - actualStops << " fewer stop(s) than optimal\n";
+        }
+    }
+
     void runMenu(const Session& session) {
         while (true) {
-            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "0. Exit\n" << "Option: ";
+            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "0. Exit\n" << "Option: ";
             int option;
             if (!(std::cin >> option)) {
                 std::cout << "\nError reading option\n";
@@ -72,6 +113,8 @@ namespace {
                 case 3:
                     showIdealLap(session);
                     break;
+                case 4:
+                    showStrategyReport(session);
                 case 0:
                     return;
                 default:
@@ -82,8 +125,8 @@ namespace {
 }
 
 int main() {
-    Loader loader("assets/netherlands_2023");
-    Session session(loader.load("netherlands_2023"));
+    Loader loader("assets/japan_2025");
+    Session session(loader.load("japan_2025"));
 
     runMenu(session);
 

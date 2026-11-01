@@ -131,6 +131,10 @@ double Driver::averageDeg() const {
     return weightedDegSum / lapsCounted;
 }
 
+int Driver::pitStopCount() const {
+    return static_cast<int>(pitStops.size());
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
         return true;
@@ -143,6 +147,15 @@ bool Driver::hasAcronym(const std::string &acronym_) const {
         return true;
     }
     return false;
+}
+
+bool Driver::racedOnSlicksOnly() const {
+    for (const Stint& stint : stints) {
+        if (!stint.isSlick()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
