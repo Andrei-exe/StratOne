@@ -4,6 +4,8 @@
 
 #include "Loader.h"
 #include <csv.hpp>
+#include <filesystem>
+#include <algorithm>
 
 namespace {
     double columnValueOrZero(const csv::CSVRow &row, const std::string &column) {
@@ -14,11 +16,15 @@ namespace {
     }
 }
 
-Loader::Loader(const std::string &folderPath_) :
-    folderPath(folderPath_) {}
+Loader::Loader(const std::string &rootFolder_) :
+    rootFolder(rootFolder_) {}
 
-void Loader::readDrivers(Session &session) const {
-    std::string driversFile = folderPath + "/drivers.csv";
+std::string Loader::sessionFolder(const std::string &event, const std::string &sessionType) const {
+    return rootFolder + "/" + event + "/" + sessionType;
+}
+
+void Loader::readDrivers(Session &session, const std::string& folder) const {
+    std::string driversFile = folder + "/drivers.csv";
     csv::CSVReader reader(driversFile);
     for (const auto& row : reader) {
         int number = row["driver_number"].get<int>();
@@ -29,8 +35,8 @@ void Loader::readDrivers(Session &session) const {
     }
 }
 
-void Loader::readStints(Session &session) const {
-    std::string stintsFile = folderPath + "/stints.csv";
+void Loader::readStints(Session &session, const std::string& folder) const {
+    std::string stintsFile = folder + "/stints.csv";
     csv::CSVReader reader(stintsFile);
     for (const auto& row : reader) {
         int driverNumber = row["driver_number"].get<int>();
@@ -42,8 +48,8 @@ void Loader::readStints(Session &session) const {
     }
 }
 
-void Loader::readLaps(Session &session) const {
-    std::string lapsFile = folderPath + "/laps.csv";
+void Loader::readLaps(Session &session, const std::string& folder) const {
+    std::string lapsFile = folder + "/laps.csv";
     csv::CSVReader reader(lapsFile);
     for (const auto& row : reader) {
         double lapDuration = columnValueOrZero(row, "lap_duration");
@@ -63,8 +69,8 @@ void Loader::readLaps(Session &session) const {
     }
 }
 
-Fuel Loader::readFuel() const {
-    std::string fuelFile = folderPath + "/fuel.csv";
+Fuel Loader::readFuel(const std::string& folder) const {
+    std::string fuelFile = folder + "/fuel.csv";
     csv::CSVReader reader(fuelFile);
     csv::CSVRow row;
     if (!reader.read_row(row)) {
@@ -75,8 +81,8 @@ Fuel Loader::readFuel() const {
     return Fuel{startFuel, secondsPerKg};
 }
 
-void Loader::readPitStops(Session &session) const {
-    std::string pitStopsFile = folderPath + "/pit.csv";
+void Loader::readPitStops(Session &session, const std::string& folder) const {
+    std::string pitStopsFile = folder + "/pit.csv";
     csv::CSVReader reader(pitStopsFile);
     for (const auto& row : reader) {
         int driverNumber = row["driver_number"].get<int>();
@@ -87,17 +93,34 @@ void Loader::readPitStops(Session &session) const {
     }
 }
 
-Session Loader::load(const std::string &sessionName) const {
-    Session session(sessionName);
-    readDrivers(session);
-    readStints(session);
-    readLaps(session);
-    readPitStops(session);
-    session.applyFuelCorrection(readFuel());
+Session Loader::load(const std::string &event, const std::string& sessionType) const {
+    const std::string folder = sessionFolder(event, sessionType);
+    Session session(event + " " + sessionType);
+    readDrivers(session, folder);
+    readStints(session, folder);
+    readLaps(session, folder);
+    readPitStops(session, folder);
+    session.applyFuelCorrection(readFuel(folder));
     return session;
 }
 
+std::vector<std::string> Loader::availableEvents(const std::string &sessionType) const {
+    std::vector<std::string> events;
+    for (const auto& entry : std::filesystem::directory_iterator(rootFolder)) {
+        if (!entry.is_directory()) {
+            continue;
+        }
+        const auto sessionPath = entry.path() / sessionType;
+        if (!std::filesystem::exists(sessionPath)) {
+            continue;
+        }
+        events.push_back(entry.path().filename().string());
+    }
+    std::ranges::sort(events);
+    return events;
+}
+
 std::ostream& operator<<(std::ostream &os, const Loader &loader) {
-    os << "Folder: " << loader.folderPath << '\n';
+    os << "Data root: " << loader.rootFolder << '\n';
     return os;
 }

@@ -6,19 +6,22 @@
 #define OOP_LOADER_H
 #include "Session.h"
 #include <string>
+#include <vector>
 
 class Loader {
-    std::string folderPath;
+    std::string rootFolder;
 
-    void readDrivers(Session& session) const;
-    void readStints(Session& session) const;
-    void readLaps(Session& session) const;
-    Fuel readFuel() const;
-    void readPitStops(Session& session) const;
+    std::string sessionFolder(const std::string& event, const std::string& sessionType) const;
+    void readDrivers(Session& session, const std::string& folder) const;
+    void readStints(Session& session, const std::string& folder) const;
+    void readLaps(Session& session, const std::string& folder) const;
+    Fuel readFuel(const std::string& folder) const;
+    void readPitStops(Session& session, const std::string& folder) const;
 
 public:
-    explicit Loader(const std::string &folderPath_);
-    Session load(const std::string& sessionName) const;
+    explicit Loader(const std::string &rootFolder_);
+    Session load(const std::string& event, const std::string& sessionType) const;
+    std::vector<std::string> availableEvents(const std::string& sessionType) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Loader& loader);
 };

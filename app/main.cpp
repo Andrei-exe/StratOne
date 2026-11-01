@@ -5,6 +5,30 @@
 #include "Strategy.h"
 
 namespace {
+    std::string chooseEvent(const Loader& loader, const std::string& sessionType) {
+        const std::vector<std::string> events = loader.availableEvents(sessionType);
+        if (events.empty()) {
+            std::cout << "\nNo events found\n";
+            return "";
+        }
+        while (true) {
+            for (size_t i = 0; i < events.size(); ++i) {
+                std::cout << i + 1 << ". " << events[i] << '\n';
+            }
+            std::cout << "\nChoose event: ";
+            int option;
+            if (!(std::cin >> option)) {
+                std::cout << "\nError reading option\n";
+                return "";
+            }
+            if (option <= 0 || option > static_cast<int>(events.size())) {
+                std::cout << "\nInvalid option\n\n";
+                continue;
+            }
+            return events[static_cast<std::size_t>(option - 1)];
+        }
+    }
+
     const Driver* readDriver(const Session& session) {
         std::string acronym;
         std::cout << "\nDriver acronym: ";
@@ -115,6 +139,7 @@ namespace {
                     break;
                 case 4:
                     showStrategyReport(session);
+                    break;
                 case 0:
                     return;
                 default:
@@ -125,9 +150,13 @@ namespace {
 }
 
 int main() {
-    Loader loader("assets/japan_2025");
-    Session session(loader.load("japan_2025"));
-
+    Loader loader("assets");
+    const std::string sessionType = "race";
+    const std::string event = chooseEvent(loader, sessionType);
+    if (event.empty()) {
+        return 0;
+    }
+    Session session(loader.load(event, sessionType));
     runMenu(session);
 
     return 0;
