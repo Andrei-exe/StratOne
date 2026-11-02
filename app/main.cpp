@@ -2,6 +2,7 @@
 #include "Loader.h"
 #include <iostream>
 
+#include "PositionChange.h"
 #include "Strategy.h"
 
 namespace {
@@ -157,6 +158,14 @@ int main() {
         return 0;
     }
     Session session(loader.load(event, sessionType));
+    // std::vector<Standing> asd = session.standingsAfterLap(53);
+    // for (const auto a : asd) {
+    //     std::cout << a << '\n';
+    // }
+    // std::vector<const Driver*> x= session.finalOrder();
+    // for (const Driver* driver : x) {
+    //     std::cout << driver->getAcronym() << '\n';
+    // }
     runMenu(session);
 
     return 0;

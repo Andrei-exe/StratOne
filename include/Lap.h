@@ -29,6 +29,7 @@ public:
 
     bool isRepresentative() const;
     bool isFasterThan(const Lap& otherLap) const;
+    bool hasStartTime() const;
     void applyFuelCorrection(const Fuel& fuel, int totalLaps);
     double fuelCorrectedDuration() const;
     std::chrono::sys_time<std::chrono::microseconds> endTime() const;

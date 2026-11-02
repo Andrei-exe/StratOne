@@ -5,7 +5,10 @@
 #ifndef OOP_SESSION_H
 #define OOP_SESSION_H
 #include <string>
+#include <chrono>
+#include <utility>
 #include "Driver.h"
+#include "PositionChange.h"
 #include "Standing.h"
 #include "Strategy.h"
 
@@ -16,6 +19,8 @@ class Session {
 
     Driver* findDriverByNumber(int number);
     int sessionLength() const;
+    std::vector<std::pair<const Driver*, std::chrono::sys_time<std::chrono::microseconds>>> crossingOrder(int lapNumber) const;
+    std::vector<const Driver*> finalOrder() const;
 
 public:
     explicit Session(const std::string& name_);
@@ -34,6 +39,7 @@ public:
     Strategy strategy() const;
     bool isDryRace() const;
     std::vector<Standing> standingsAfterLap(int lapNumber) const;
+    std::vector<PositionChange> positionChanges() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };

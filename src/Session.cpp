@@ -5,8 +5,6 @@
 #include "Session.h"
 #include "Statistics.h"
 #include <algorithm>
-#include <chrono>
-#include <utility>
 
 Session::Session(const std::string& name_) : name(name_) {}
 
@@ -55,6 +53,39 @@ int Session::sessionLength() const {
         }
     }
     return length;
+}
+
+std::vector<std::pair<const Driver *, std::chrono::sys_time<std::chrono::microseconds>>> Session::crossingOrder(int lapNumber) const {
+    std::vector<std::pair<const Driver*, std::chrono::sys_time<std::chrono::microseconds>>> crossings;
+    for (const Driver& driver : drivers) {
+        const Lap* lap = driver.findLap(lapNumber);
+        if (lap == nullptr || !lap->hasStartTime()) {
+            continue;
+        }
+        crossings.emplace_back(&driver, lap->endTime());
+    }
+    std::ranges::sort(crossings, [](const auto& a, const auto& b) {
+        return a.second < b.second;
+    });
+    return crossings;
+}
+
+std::vector<const Driver*> Session::finalOrder() const {
+    std::vector<const Driver*> finalClassification;
+    for (const Driver& driver : drivers) {
+        const Lap* finalDriverLap = driver.findLap(driver.lastLapNumber());
+        if (finalDriverLap == nullptr || !finalDriverLap->hasStartTime()) {
+            continue;
+        }
+        finalClassification.push_back(&driver);
+    }
+    std::ranges::sort(finalClassification, [](const auto& a, const auto& b) {
+        if (a->lastLapNumber() != b->lastLapNumber()) {
+            return a->lastLapNumber() > b->lastLapNumber();
+        }
+        return (a->findLap(a->lastLapNumber()))->endTime() < (b->findLap(b->lastLapNumber()))->endTime();
+    });
+    return finalClassification;
 }
 
 const Driver *Session::findDriverByAcronym(const std::string& acronym) const {
@@ -122,17 +153,7 @@ bool Session::isDryRace() const {
 }
 
 std::vector<Standing> Session::standingsAfterLap(int lapNumber) const {
-    std::vector<std::pair<const Driver*, std::chrono::sys_time<std::chrono::microseconds>>> crossings;
-    for (const Driver& driver : drivers) {
-        const Lap* lap = driver.findLap(lapNumber);
-        if (lap == nullptr) {
-            continue;
-        }
-        crossings.emplace_back(&driver, lap->endTime());
-    }
-    std::ranges::sort(crossings, [](const auto& a, const auto& b) {
-        return a.second < b.second;
-    });
+    const auto crossings = crossingOrder(lapNumber);
     if (crossings.empty()) {
         return {};
     }
@@ -143,6 +164,29 @@ std::vector<Standing> Session::standingsAfterLap(int lapNumber) const {
         standings.emplace_back(crossings[i].first->getAcronym(), static_cast<int>(i) + 1, gap);
     }
     return standings;
+}
+
+std::vector<PositionChange> Session::positionChanges() const {
+    const auto start = crossingOrder(1);
+    const auto finish = finalOrder();
+    std::vector<PositionChange> changes;
+    for (std::size_t i = 0; i < finish.size(); ++i) {
+        int startPos = 0;
+        for (std::size_t j = 0; j < start.size(); ++j) {
+            if (start[j].first == finish[i]) {
+                startPos = static_cast<int>(j) + 1;
+                break;
+            }
+        }
+        if (startPos == 0) {
+            continue;
+        }
+        changes.emplace_back(finish[i]->getAcronym(), startPos, static_cast<int>(i) + 1);
+    }
+    std::ranges::stable_sort(changes, [](const PositionChange& a, const PositionChange& b) {
+        return a.positionsGained() > b.positionsGained();
+    });
+    return changes;
 }
 
 std::ostream& operator<<(std::ostream& os, const Session& session) {

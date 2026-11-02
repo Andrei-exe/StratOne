@@ -34,6 +34,13 @@ bool Lap::isFasterThan(const Lap &otherLap) const {
     return false;
 }
 
+bool Lap::hasStartTime() const {
+    if (startTime != std::chrono::sys_time<std::chrono::microseconds>{}) {
+        return true;
+    }
+    return false;
+}
+
 void Lap::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
     fuelPenalty = fuel.timeCost(number, totalLaps);
 }

@@ -79,6 +79,7 @@ target_sources(${MAIN_LIBRARY_NAME}
         src/Statistics.cpp
         src/Strategy.cpp
         src/Standing.cpp
+        src/PositionChange.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
