@@ -140,7 +140,7 @@ namespace {
             std::cout << "\nNo data for changes\n";
             return;
         }
-        std::cout << "\nPositions gained after lap 1 (sorted by gains):\n";
+        std::cout << "\nPositions gained after lap 1 (sorted by gain):\n";
         for (const auto& change : changes) {
             std::cout << change << '\n';
         }
