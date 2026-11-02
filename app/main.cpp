@@ -2,8 +2,6 @@
 #include "Loader.h"
 #include <iostream>
 
-#include "date.h"
-#include "Standing.h"
 #include "Strategy.h"
 
 namespace {

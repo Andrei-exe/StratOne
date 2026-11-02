@@ -4,6 +4,9 @@
 
 #include "Session.h"
 #include "Statistics.h"
+#include <algorithm>
+#include <chrono>
+#include <utility>
 
 Session::Session(const std::string& name_) : name(name_) {}
 
@@ -116,6 +119,30 @@ bool Session::isDryRace() const {
         }
     }
     return true;
+}
+
+std::vector<Standing> Session::standingsAfterLap(int lapNumber) const {
+    std::vector<std::pair<const Driver*, std::chrono::sys_time<std::chrono::microseconds>>> crossings;
+    for (const Driver& driver : drivers) {
+        const Lap* lap = driver.findLap(lapNumber);
+        if (lap == nullptr) {
+            continue;
+        }
+        crossings.emplace_back(&driver, lap->endTime());
+    }
+    std::ranges::sort(crossings, [](const auto& a, const auto& b) {
+        return a.second < b.second;
+    });
+    if (crossings.empty()) {
+        return {};
+    }
+    const auto leaderTime = crossings[0].second;
+    std::vector<Standing> standings;
+    for (std::size_t i = 0; i < crossings.size(); ++i) {
+        const double gap = std::chrono::duration<double>(crossings[i].second - leaderTime).count();
+        standings.emplace_back(crossings[i].first->getAcronym(), static_cast<int>(i) + 1, gap);
+    }
+    return standings;
 }
 
 std::ostream& operator<<(std::ostream& os, const Session& session) {

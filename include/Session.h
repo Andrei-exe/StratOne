@@ -6,6 +6,7 @@
 #define OOP_SESSION_H
 #include <string>
 #include "Driver.h"
+#include "Standing.h"
 #include "Strategy.h"
 
 
@@ -32,6 +33,7 @@ public:
     double pitLoss() const;
     Strategy strategy() const;
     bool isDryRace() const;
+    std::vector<Standing> standingsAfterLap(int lapNumber) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Session& session);
 };
