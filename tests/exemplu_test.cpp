@@ -58,8 +58,10 @@ namespace {
     }
 
     void testPositionsGained() {
-        assert(PositionChange("ALO", 9, 5).positionsGained() == 4);
-        assert(PositionChange("STR", 10, 15).positionsGained() == -5);
+        const PositionChange gained("ALO", 9, 5);
+        const PositionChange lost("STR", 10, 15);
+        assert(gained.positionsGained() == 4);
+        assert(lost.positionsGained() == -5);
     }
 }
 
