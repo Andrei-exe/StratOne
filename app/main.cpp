@@ -2,9 +2,6 @@
 #include "Loader.h"
 #include <iostream>
 
-#include "PositionChange.h"
-#include "Strategy.h"
-
 namespace {
     std::string chooseEvent(const Loader& loader, const std::string& sessionType) {
         const std::vector<std::string> events = loader.availableEvents(sessionType);
@@ -187,6 +184,7 @@ namespace {
                     break;
                 case 7:
                     showFastestPitstop(session);
+                    break;
                 case 0:
                     return;
                 default:

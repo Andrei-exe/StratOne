@@ -8,7 +8,12 @@
 
 Session::Session(const std::string& name_) : name(name_) {}
 
-void Session::addDriver(const Driver& driver) {
+void Session::addDriver(int number, const Driver& driver) {
+    Driver* existingDriver = findDriverByNumber(number);
+    if (existingDriver != nullptr) {
+        *existingDriver = driver;
+        return;
+    }
     drivers.push_back(driver);
 }
 

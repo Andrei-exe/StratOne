@@ -25,7 +25,7 @@ class Session {
 public:
     explicit Session(const std::string& name_);
 
-    void addDriver(const Driver& driver);
+    void addDriver(int number, const Driver& driver);
     const Driver* findDriverByAcronym(const std::string& acronym) const;
 
     const Driver* idealFastestDriver() const;

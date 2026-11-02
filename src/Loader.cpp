@@ -48,7 +48,7 @@ void Loader::readDrivers(Session &session, const std::string& folder) const {
         std::string acronym = row["name_acronym"].get<std::string>();
         std::string fullName = row["full_name"].get<std::string>();
         std::string team = row["team_name"].get<std::string>();
-        session.addDriver(Driver(number, acronym, fullName, team));
+        session.addDriver(number, Driver(number, acronym, fullName, team));
     }
 }
 
