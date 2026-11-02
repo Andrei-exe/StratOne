@@ -135,6 +135,16 @@ int Driver::pitStopCount() const {
     return static_cast<int>(pitStops.size());
 }
 
+const Lap *Driver::findLap(int lapNumber) const {
+    for (const Stint& stint : stints) {
+        if (!stint.isLapInStint(lapNumber)) {
+            continue;
+        }
+        return stint.findLap(lapNumber);
+    }
+    return nullptr;
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
         return true;

@@ -131,6 +131,15 @@ void Stint::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
     }
 }
 
+const Lap *Stint::findLap(int lapNumber) const {
+    for (const Lap& lap : laps) {
+        if (lap.getLapNumber() == lapNumber) {
+            return &lap;
+        }
+    }
+    return nullptr;
+}
+
 std::ostream& operator<<(std::ostream& os, const Stint& stint) {
     if (stint.startLap == stint.endLap) {
         os << "Lap " << stint.startLap;

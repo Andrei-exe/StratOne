@@ -6,6 +6,9 @@
 #include <csv.hpp>
 #include <filesystem>
 #include <algorithm>
+#include <chrono>
+#include <date.h>
+#include <sstream>
 
 namespace {
     double columnValueOrZero(const csv::CSVRow &row, const std::string &column) {
@@ -13,6 +16,20 @@ namespace {
             return 0.0;
         }
         return row[column].get<double>();
+    }
+
+    std::chrono::sys_time<std::chrono::microseconds> columnTimestamp(const csv::CSVRow &row, const std::string &column) {
+        const std::string text = row[column].get<std::string>();
+        if (text.empty()) {
+            return {};
+        }
+        std::istringstream input(text);
+        std::chrono::sys_time<std::chrono::microseconds> timestamp{};
+        date::from_stream(input, "%F %T%Ez", timestamp);
+        if (input.fail()) {
+            return {};
+        }
+        return timestamp;
     }
 }
 
@@ -58,6 +75,7 @@ void Loader::readLaps(Session &session, const std::string& folder) const {
         }
         int driverNumber = row["driver_number"].get<int>();
         int lapNumber = row["lap_number"].get<int>();
+        std::chrono::sys_time<std::chrono::microseconds> startTime = columnTimestamp(row, "date_start");
         std::array<double, 3> sectors = {
             columnValueOrZero(row, "duration_sector_1"),
             columnValueOrZero(row, "duration_sector_2"),
@@ -65,7 +83,7 @@ void Loader::readLaps(Session &session, const std::string& folder) const {
         };
         int speedTrap = static_cast<int>(columnValueOrZero(row, "st_speed"));
         bool isPitOutLap = row["is_pit_out_lap"].get<bool>();
-        session.addLap(driverNumber, Lap(lapNumber, lapDuration, sectors, speedTrap, isPitOutLap));
+        session.addLap(driverNumber, Lap(lapNumber, lapDuration, startTime, sectors, speedTrap, isPitOutLap));
     }
 }
 

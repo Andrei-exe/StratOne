@@ -4,8 +4,8 @@
 
 #include "Lap.h"
 
-Lap::Lap(int number_, double duration_, std::array<double, 3> sectors_, int speedTrap_, bool isPitOutLap_) :
-    number(number_), duration(duration_), sectors(sectors_), speedTrap(speedTrap_), isPitOutLap(isPitOutLap_), fuelPenalty(0) {}
+Lap::Lap(int number_, double duration_, std::chrono::sys_time<std::chrono::microseconds> startTime_, std::array<double, 3> sectors_, int speedTrap_, bool isPitOutLap_) :
+    number(number_), duration(duration_), startTime(startTime_), sectors(sectors_), speedTrap(speedTrap_), isPitOutLap(isPitOutLap_), fuelPenalty(0) {}
 
 int Lap::getLapNumber() const {
     return number;
@@ -40,6 +40,12 @@ void Lap::applyFuelCorrection(const Fuel &fuel, int totalLaps) {
 
 double Lap::fuelCorrectedDuration() const {
     return duration - fuelPenalty;
+}
+
+std::chrono::sys_time<std::chrono::microseconds> Lap::endTime() const {
+    const std::chrono::microseconds elapsedTime = std::chrono::round<std::chrono::microseconds>(std::chrono::duration<double>(duration));
+    return startTime + elapsedTime;
+
 }
 
 std::ostream& operator<<(std::ostream& os, const Lap& lap) {

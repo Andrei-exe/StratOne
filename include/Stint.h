@@ -34,6 +34,7 @@ public:
     int topSpeed() const;
     double tyreDeg() const;
     void applyFuelCorrection(const Fuel& fuel, int totalLaps);
+    const Lap* findLap(int lapNumber) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Stint& stint);
 };

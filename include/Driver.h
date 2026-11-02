@@ -39,6 +39,7 @@ public:
     std::vector<double> pitLaneDurations() const;
     double averageDeg() const;
     int pitStopCount() const;
+    const Lap* findLap(int lapNumber) const;
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;
