@@ -40,6 +40,7 @@ public:
     double averageDeg() const;
     int pitStopCount() const;
     const Lap* findLap(int lapNumber) const;
+    const PitStop* fastestPitStop() const;
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;

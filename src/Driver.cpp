@@ -145,6 +145,19 @@ const Lap *Driver::findLap(int lapNumber) const {
     return nullptr;
 }
 
+const PitStop *Driver::fastestPitStop() const {
+    const PitStop* fastest = nullptr;
+    for (const PitStop& pitstop : pitStops) {
+        if (!pitstop.hasStopTime()) {
+            continue;
+        }
+        if (fastest == nullptr || pitstop.isFasterThan(*fastest)) {
+            fastest = &pitstop;
+        }
+    }
+    return fastest;
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
         return true;

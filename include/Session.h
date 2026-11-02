@@ -30,6 +30,7 @@ public:
 
     const Driver* idealFastestDriver() const;
     const Driver* fastestLapDriver() const;
+    const Driver* fastestPitstopDriver() const;
 
     bool addStint(int number, const Stint& stint);
     bool addLap(int number, const Lap& lap);

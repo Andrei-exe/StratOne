@@ -36,6 +36,20 @@ const Driver *Session::fastestLapDriver() const {
     return fastest;
 }
 
+const Driver *Session::fastestPitstopDriver() const {
+    const Driver* fastest = nullptr;
+    for (const Driver& driver : drivers) {
+        const PitStop* temp = driver.fastestPitStop();
+        if (temp == nullptr) {
+            continue;
+        }
+        if (fastest == nullptr || temp->isFasterThan(*(fastest->fastestPitStop()))) {
+            fastest = &driver;
+        }
+    }
+    return fastest;
+}
+
 Driver *Session::findDriverByNumber(int number) {
     for (Driver& driver : drivers) {
         if (driver.hasNumber(number)) {

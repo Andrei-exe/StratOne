@@ -149,9 +149,18 @@ namespace {
         }
     }
 
+    void showFastestPitstop(const Session& session) {
+        const Driver* driver = session.fastestPitstopDriver();
+        if (driver == nullptr) {
+            std::cout << "\nNo pitstop data\n";
+            return;
+        }
+        std::cout << "\nFastest pitstop: " << driver->getAcronym() << " - " << *(driver->fastestPitStop()) << '\n';
+    }
+
     void runMenu(const Session& session) {
         while (true) {
-            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "5. Standings on any lap\n" << "6. Position changes\n" << "0. Exit\n" << "Option: ";
+            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "5. Standings on any lap\n" << "6. Position changes\n" << "7. Fastest pitstop\n" << "0. Exit\n" << "Option: ";
             int option;
             if (!(std::cin >> option)) {
                 std::cout << "\nError reading option\n";
@@ -176,6 +185,8 @@ namespace {
                 case 6:
                     showMovers(session);
                     break;
+                case 7:
+                    showFastestPitstop(session);
                 case 0:
                     return;
                 default:
