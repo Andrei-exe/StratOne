@@ -120,9 +120,38 @@ namespace {
         }
     }
 
+    void showStandings(const Session& session) {
+        std::cout << "\nLap number: ";
+        int lapNr;
+        if (!(std::cin >> lapNr)) {
+            std::cout << "\nError reading lap number\n";
+            return;
+        }
+        const auto standings = session.standingsAfterLap(lapNr);
+        if (standings.empty()) {
+            std::cout << "\nNo data for lap " << lapNr << "\n";
+            return;
+        }
+        for (const auto& standing : standings) {
+            std::cout << standing << '\n';
+        }
+    }
+
+    void showMovers(const Session& session) {
+        const auto changes = session.positionChanges();
+        if (changes.empty()) {
+            std::cout << "\nNo data for changes\n";
+            return;
+        }
+        std::cout << "\nPositions gained after lap 1 (sorted by gains):\n";
+        for (const auto& change : changes) {
+            std::cout << change << '\n';
+        }
+    }
+
     void runMenu(const Session& session) {
         while (true) {
-            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "0. Exit\n" << "Option: ";
+            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "5. Standings on any lap\n" << "6. Position changes\n" << "0. Exit\n" << "Option: ";
             int option;
             if (!(std::cin >> option)) {
                 std::cout << "\nError reading option\n";
@@ -141,6 +170,12 @@ namespace {
                 case 4:
                     showStrategyReport(session);
                     break;
+                case 5:
+                    showStandings(session);
+                    break;
+                case 6:
+                    showMovers(session);
+                    break;
                 case 0:
                     return;
                 default:
@@ -158,14 +193,6 @@ int main() {
         return 0;
     }
     Session session(loader.load(event, sessionType));
-    // std::vector<Standing> asd = session.standingsAfterLap(53);
-    // for (const auto a : asd) {
-    //     std::cout << a << '\n';
-    // }
-    // std::vector<const Driver*> x= session.finalOrder();
-    // for (const Driver* driver : x) {
-    //     std::cout << driver->getAcronym() << '\n';
-    // }
     runMenu(session);
 
     return 0;
