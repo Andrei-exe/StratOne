@@ -270,7 +270,7 @@ std::vector<PitDuel> Session::pitDuels() const {
 std::ostream& operator<<(std::ostream& os, const Session& session) {
     os << "=== " << session.name << " ===\n";
     for (const Driver& driver : session.drivers) {
-        os << driver << '\n';
+        os << driver.summary() << '\n';
     }
     return os;
 }

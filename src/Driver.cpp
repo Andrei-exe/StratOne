@@ -28,6 +28,10 @@ const std::string &Driver::getAcronym() const {
     return acronym;
 }
 
+std::string Driver::summary() const {
+    return "#" + std::to_string(number) + " " + fullName + " (acronym: " + acronym + ") " + team;
+}
+
 void Driver::addStint(const Stint &stint) {
     stints.push_back(stint);
 }
@@ -215,7 +219,7 @@ bool Driver::racedOnSlicksOnly() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Driver& driver) {
-    os << "#" << driver.number << " " << driver.fullName << " (" <<  driver.acronym << ") - " << driver.team << '\n';
+    os << driver.summary() << '\n';
     for (const Stint& stint : driver.stints) {
         os << " " << stint;
     }

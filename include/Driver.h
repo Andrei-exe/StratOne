@@ -27,6 +27,7 @@ public:
     ~Driver();
 
     const std::string& getAcronym() const;
+    std::string summary() const;
 
     void addStint(const Stint& stint);
     bool addLap(const Lap& lap);

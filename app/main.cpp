@@ -28,6 +28,7 @@ namespace {
     }
 
     const Driver* readDriver(const Session& session) {
+        std::cout << '\n' << session;
         std::string acronym;
         std::cout << "\nDriver acronym: ";
         if (!(std::cin >> acronym)) {
