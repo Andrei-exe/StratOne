@@ -80,6 +80,7 @@ target_sources(${MAIN_LIBRARY_NAME}
         src/Strategy.cpp
         src/Standing.cpp
         src/PositionChange.cpp
+        src/PitDuel.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

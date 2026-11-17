@@ -158,6 +158,39 @@ const PitStop *Driver::fastestPitStop() const {
     return fastest;
 }
 
+std::optional<double> Driver::gapTo(const Driver &driver, int lapNumber) const {
+    const Lap* primary = findLap(lapNumber);
+    const Lap* secondary = driver.findLap(lapNumber);
+    if (primary == nullptr || secondary == nullptr || !primary->hasStartTime() || !secondary->hasStartTime()) {
+        return std::nullopt;
+    }
+
+    std::chrono::duration<double> diff = secondary->endTime() - primary->endTime();
+    return diff.count();
+}
+
+std::vector<int> Driver::pitLaps() const {
+    std::vector<int> pitLaps;
+    for (const PitStop& pitstop : pitStops) {
+        pitLaps.push_back(pitstop.getInLap());
+    }
+    return pitLaps;
+}
+
+std::optional<int> Driver::firstPitBetweenLaps(int startLap, int endLap) const {
+    std::optional<int> first;
+    for (const PitStop& pitStop : pitStops) {
+        int inLap = pitStop.getInLap();
+        if (inLap < startLap || inLap > endLap) {
+            continue;
+        }
+        if (!first.has_value() || inLap < *first) {
+            first = inLap;
+        }
+    }
+    return first;
+}
+
 bool Driver::hasNumber(int number_) const {
     if (number_ == number) {
         return true;

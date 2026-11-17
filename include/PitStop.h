@@ -18,6 +18,7 @@ public:
     double getPitLaneDuration() const;
     bool hasStopTime() const;
     bool isFasterThan(const PitStop& pitstop) const;
+    int getInLap() const;
 
     friend std::ostream& operator<<(std::ostream& os, const PitStop& pitStop);
 };

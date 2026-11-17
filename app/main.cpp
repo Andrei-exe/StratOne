@@ -155,9 +155,25 @@ namespace {
         std::cout << "\nFastest pitstop: " << driver->getAcronym() << " - " << *(driver->fastestPitStop()) << '\n';
     }
 
+    void showPitDuels(const Session& session) {
+        if (!session.isDryRace()) {
+            std::cout << "\nPit duels analysis not available for wet races yet\n";
+            return;
+        }
+        const auto duels = session.pitDuels();
+        if (duels.empty()) {
+            std::cout << "\nNo data for pit duels\n";
+            return;
+        }
+        std::cout << "\nUndercut / overcut attempts:\n";
+        for (const auto& duel : duels) {
+            std::cout << duel << '\n';
+        }
+    }
+
     void runMenu(const Session& session) {
         while (true) {
-            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "5. Standings on any lap\n" << "6. Position changes\n" << "7. Fastest pitstop\n" << "0. Exit\n" << "Option: ";
+            std::cout << "\n1. Driver info\n" << "2. Fastest lap\n" << "3. Ideal lap\n" << "4. Strategy report\n" << "5. Standings on any lap\n" << "6. Position changes\n" << "7. Fastest pitstop\n" << "8. Pit duels\n" << "0. Exit\n" << "Option: ";
             int option;
             if (!(std::cin >> option)) {
                 std::cout << "\nError reading option\n";
@@ -184,6 +200,9 @@ namespace {
                     break;
                 case 7:
                     showFastestPitstop(session);
+                    break;
+                case 8:
+                    showPitDuels(session);
                     break;
                 case 0:
                     return;

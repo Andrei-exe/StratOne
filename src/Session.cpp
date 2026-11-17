@@ -5,6 +5,7 @@
 #include "Session.h"
 #include "Statistics.h"
 #include <algorithm>
+#include <cmath>
 
 Session::Session(const std::string& name_) : name(name_) {}
 
@@ -107,6 +108,40 @@ std::vector<const Driver*> Session::finalOrder() const {
     return finalClassification;
 }
 
+int Session::positionInCrossings(const std::vector<std::pair<const Driver*, std::chrono::sys_time<std::chrono::microseconds>>> &crossings, const Driver *driver) {
+    for (std::size_t j = 0; j < crossings.size(); ++j) {
+        if (crossings[j].first == driver) {
+            return static_cast<int>(j) + 1;
+        }
+    }
+    return 0;
+}
+
+std::optional<PitDuel> Session::pitDuelBetween(const Driver &firstPitter, int inLap, const Driver &rivalPitter) {
+    constexpr double maxGapToConsiderDuel = 5.0;
+    constexpr int maxLapsUntilRivalStops = 3;
+    if (rivalPitter.firstPitBetweenLaps(inLap, inLap)) {
+        return std::nullopt;
+    }
+
+    const std::optional<int> rivalPitLap = rivalPitter.firstPitBetweenLaps(inLap + 1, inLap + maxLapsUntilRivalStops);
+    if (!rivalPitLap) {
+        return std::nullopt;
+    }
+
+    const std::optional<double> gapBefore = firstPitter.gapTo(rivalPitter, inLap - 1);
+    if (!gapBefore || std::abs(*gapBefore) > maxGapToConsiderDuel) {
+        return std::nullopt;
+    }
+
+    const std::optional<double> gapAfter = firstPitter.gapTo(rivalPitter, *rivalPitLap + 1);
+    if (!gapAfter) {
+        return std::nullopt;
+    }
+
+    return PitDuel(firstPitter.getAcronym(), rivalPitter.getAcronym(), inLap, *rivalPitLap, *gapBefore, *gapAfter);
+}
+
 const Driver *Session::findDriverByAcronym(const std::string& acronym) const {
     for (const Driver& driver : drivers) {
         if (driver.hasAcronym(acronym)) {
@@ -190,13 +225,7 @@ std::vector<PositionChange> Session::positionChanges() const {
     const auto finish = finalOrder();
     std::vector<PositionChange> changes;
     for (std::size_t i = 0; i < finish.size(); ++i) {
-        int startPos = 0;
-        for (std::size_t j = 0; j < start.size(); ++j) {
-            if (start[j].first == finish[i]) {
-                startPos = static_cast<int>(j) + 1;
-                break;
-            }
-        }
+        int startPos = positionInCrossings(start, finish[i]);
         if (startPos == 0) {
             continue;
         }
@@ -206,6 +235,36 @@ std::vector<PositionChange> Session::positionChanges() const {
         return a.positionsGained() > b.positionsGained();
     });
     return changes;
+}
+
+std::vector<PitDuel> Session::pitDuels() const {
+    std::vector<PitDuel> duels;
+    for (const Driver& driver : drivers) {
+        for (const int pitLap : driver.pitLaps()) {
+            const auto order = crossingOrder(pitLap - 1);
+            const int pos = positionInCrossings(order, &driver);
+            if (pos == 0) {
+                continue;
+            }
+            std::vector<std::size_t> rivalIndexes;
+            if (pos >= 2) {
+                rivalIndexes.push_back(static_cast<std::size_t>(pos - 2));
+            }
+            if (static_cast<std::size_t>(pos) < order.size()) {
+                rivalIndexes.push_back(static_cast<std::size_t>(pos));
+            }
+            for (const std::size_t index : rivalIndexes) {
+                if (const auto duel = pitDuelBetween(driver, pitLap, *order[index].first)) {
+                    duels.emplace_back(*duel);
+                }
+            }
+        }
+    }
+    std::ranges::stable_sort(duels, [](const PitDuel& a, const PitDuel& b) {
+        return a.isEarlierThan(b);
+    });
+
+    return duels;
 }
 
 std::ostream& operator<<(std::ostream& os, const Session& session) {

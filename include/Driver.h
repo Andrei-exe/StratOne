@@ -5,6 +5,7 @@
 #ifndef OOP_DRIVER_H
 #define OOP_DRIVER_H
 #include <string>
+#include <optional>
 #include "Stint.h"
 #include "PitStop.h"
 
@@ -41,6 +42,9 @@ public:
     int pitStopCount() const;
     const Lap* findLap(int lapNumber) const;
     const PitStop* fastestPitStop() const;
+    std::optional<double> gapTo(const Driver& driver, int lapNumber) const;
+    std::vector<int> pitLaps() const;
+    std::optional<int> firstPitBetweenLaps(int startLap, int endLap) const;
 
     bool hasNumber(int number_) const;
     bool hasAcronym(const std::string& acronym_) const;

@@ -25,6 +25,10 @@ bool PitStop::isFasterThan(const PitStop &pitstop) const {
     return false;
 }
 
+int PitStop::getInLap() const {
+    return inLap;
+}
+
 std::ostream &operator<<(std::ostream &os, const PitStop &pitStop) {
     os << "Pitted on lap " << pitStop.inLap << ": time in pits " << pitStop.pitlaneDuration << "s";
     if (pitStop.stopDuration > 0) {
